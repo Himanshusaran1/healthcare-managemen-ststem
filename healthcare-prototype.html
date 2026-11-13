@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CareLink – Healthcare Management (Prototype)</title>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f9fb;--card:#fff;--ink:#12303d;--mute:#5b7482;--line:#dce8ee;--blue:#1565c0;--teal:#0f9d9a;--tealbg:#e3f6f5;--bluebg:#e6f0fb;--red:#c62828;--amber:#b26a00;--green:#2e7d32;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1a21;--card:#16262f;--ink:#e6f1f5;--mute:#93aab6;--line:#27404c;--bluebg:#16324f;--tealbg:#123a3b;--blue:#64aaf5;--teal:#3cc9c5}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;font:15px/1.5 Figtree,system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+h1{font-size:1.4rem;margin:0 0 4px}h2{font-size:1.05rem;margin:0 0 12px}p{margin:0}
+.muted{color:var(--mute)}
+.shell{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+aside{background:var(--card);border-right:1px solid var(--line);padding:16px 12px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{font-weight:700;font-size:1.15rem;color:var(--blue);padding:4px 10px 14px}.brand b{color:var(--teal)}
+nav a{display:block;padding:9px 12px;border-radius:10px;color:var(--ink);text-decoration:none;margin-bottom:2px;font-weight:500}
+nav a:hover{background:var(--bluebg)}nav a.on{background:var(--blue);color:#fff}
+main{padding:20px;min-width:0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.who{display:flex;align-items:center;gap:10px}
+.menu{display:none}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-bottom:16px}
+.grid2{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 1px 3px rgba(18,48,61,.07)}
+.stat b{display:block;font-size:1.7rem;color:var(--blue)}.stat.t b{color:var(--teal)}
+.btn{border:0;border-radius:9px;padding:8px 14px;font:inherit;font-weight:600;cursor:pointer;background:var(--blue);color:#fff}
+.btn.t{background:var(--teal)}.btn.o{background:transparent;color:var(--blue);border:1px solid var(--blue)}.btn.d{background:var(--red)}.btn.s{padding:4px 10px;font-size:13px}
+input,select,textarea{font:inherit;width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink)}
+label{display:block;font-weight:600;font-size:13px;margin:10px 0 4px}
+.err{color:var(--red);font-size:13px;min-height:18px}
+.tools{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}.tools input{max-width:280px}.tools select{max-width:170px}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:560px}
+th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);white-space:nowrap}th{font-size:13px;color:var(--mute);cursor:pointer}
+.pill{padding:2px 10px;border-radius:99px;font-size:12px;font-weight:600;background:var(--bluebg);color:var(--blue)}
+.pill.Completed,.pill.Active,.pill.Confirmed{background:var(--tealbg);color:var(--green)}.pill.Cancelled,.pill.Inactive{background:#fde8e8;color:var(--red)}.pill.Pending{background:#fff3e0;color:var(--amber)}
+.bars{display:flex;align-items:flex-end;gap:8px;height:150px}.bars div{flex:1;text-align:center;font-size:11px;color:var(--mute)}.bars i{display:block;background:linear-gradient(var(--teal),var(--blue));border-radius:6px 6px 0 0;margin-bottom:4px}
+.row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.tl{border-left:3px solid var(--teal);padding-left:14px;margin-left:6px}.tl div{margin-bottom:14px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}.cal span{padding:8px 0;border-radius:8px;background:var(--bluebg);font-size:13px}.cal span.on{background:var(--teal);color:#fff}
+.bg{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:9}
+.modal{background:var(--card);border-radius:14px;padding:20px;max-width:440px;width:100%;max-height:90vh;overflow:auto}
+.toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));right:16px;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;z-index:10}
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;background:linear-gradient(135deg,var(--bluebg),var(--tealbg))}
+.login .card{max-width:400px;width:100%;padding:26px}.pw{position:relative}.pw button{position:absolute;right:6px;top:5px}
+.empty{text-align:center;padding:30px;color:var(--mute)}
+.note{background:#fff8e1;color:#6b4e00;border-radius:10px;padding:8px 12px;font-size:13px;margin-bottom:14px}
+@media(max-width:800px){.shell{display:block}aside{position:fixed;left:-260px;width:240px;z-index:8;transition:left .2s}aside.open{left:0}.menu{display:inline-block}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const $=(s,r=document)=>r.querySelector(s);
+const NAV={admin:[['overview','Overview'],['users','User management'],['appointments','Appointments'],['settings','System settings'],['analytics','Analytics']],
+doctor:[['overview','Overview'],['schedule','Schedule'],['records','Patient records'],['appointments','Appointments'],['feedback','Patient feedback']],
+patient:[['overview','Overview'],['book','Book appointment'],['history','Appointment history'],['medical','Medical history'],['profile','Profile']]};
+const NAMES={admin:'Dr. Meera Rao (Admin)',doctor:'Dr. Arjun Mehta',patient:'Riya Sharma'};
+let users=[['U001','Riya Sharma','riya@mail.test','Patient','Active'],['U002','Dr. Arjun Mehta','arjun@care.test','Doctor','Active'],['U003','Dr. Sana Iqbal','sana@care.test','Doctor','Active'],['U004','Kabir Singh','kabir@mail.test','Patient','Inactive'],['U005','Neha Gupta','neha@mail.test','Patient','Active'],['U006','Meera Rao','meera@care.test','Admin','Active'],['U007','Vikram Joshi','vikram@mail.test','Patient','Active'],['U008','Dr. Tara Nair','tara@care.test','Doctor','Inactive']];
+let appts=[['A1001','Riya Sharma','Dr. Arjun Mehta','Cardiology','2026-10-14','10:00','Confirmed'],['A1002','Kabir Singh','Dr. Sana Iqbal','Dermatology','2026-10-14','11:30','Pending'],['A1003','Neha Gupta','Dr. Arjun Mehta','Cardiology','2026-10-12','09:30','Completed'],['A1004','Vikram Joshi','Dr. Tara Nair','Pediatrics','2026-10-13','14:00','Cancelled'],['A1005','Riya Sharma','Dr. Sana Iqbal','Dermatology','2026-09-28','16:00','Completed'],['A1006','Neha Gupta','Dr. Arjun Mehta','Cardiology','2026-10-16','12:00','Pending']];
+const doctors=[['Dr. Arjun Mehta','Cardiology',['09:00','10:00','11:00']],['Dr. Sana Iqbal','Dermatology',['10:30','11:30','15:00']],['Dr. Tara Nair','Pediatrics',['09:30','13:00','14:00']]];
+const records=[['Riya Sharma','Penicillin','Hypertension','Amlodipine 5mg','Stable; review in 3 months','2026-09-28 16:20','Dr. Arjun Mehta'],['Neha Gupta','None known','Arrhythmia','Metoprolol 25mg','ECG scheduled','2026-10-12 09:50','Dr. Arjun Mehta'],['Kabir Singh','Latex','Eczema','Hydrocortisone cream','Avoid triggers','2026-08-03 11:10','Dr. Sana Iqbal']];
+const feedback=[[5,'2026-10-02','Riya S.','Clear explanations and no waiting.'],[4,'2026-09-25','Neha G.','Helpful, but the clinic was busy.'],[5,'2026-09-12','Anil K.','Very thorough consultation.'],[3,'2026-09-01','Priya M.','Long wait before the visit.']];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pill=s=>`<span class="pill ${s}">${s}</span>`;
+function toast(m){const t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.textContent=m;document.body.append(t);setTimeout(()=>t.remove(),2500)}
+function modal(html,onOk,okLabel='Confirm'){const b=document.createElement('div');b.className='bg';b.innerHTML=`<div class="modal" role="dialog" aria-modal="true">${html}<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px"><button class="btn o" id="mc">Close</button>${onOk?`<button class="btn" id="mo">${okLabel}</button>`:''}</div></div>`;document.body.append(b);
+$('#mc',b).onclick=()=>b.remove();if(onOk)$('#mo',b).onclick=()=>{if(onOk(b)!==false)b.remove()};$('button',b).focus()}
+function stat(n,l,t){return `<div class="card stat ${t?'t':''}"><b>${n}</b><span class="muted">${l}</span></div>`}
+function bars(d){const m=Math.max(...d.map(x=>x[1]));return `<div class="bars" role="img" aria-label="Bar chart">${d.map(x=>`<div><i style="height:${x[1]/m*120}px"></i>${x[0]}<br><b>${x[1]}</b></div>`).join('')}</div>`}
+function list(items){return items.map(i=>`<div class="row"><span>${i[0]}</span><span class="muted">${i[1]}</span></div>`).join('')}
+// Generic table with search, filter, sort, pagination (client-side mock)
+function table(id,cols,rows,{filterCol,filterOpts,actions}={}){
+  const st={q:'',f:'',s:-1,asc:true,p:0},per=5;
+  const host=document.createElement('div');
+  const draw=()=>{let r=rows().filter(x=>x.join(' ').toLowerCase().includes(st.q)&&(!st.f||x[filterCol]===st.f));
+    if(st.s>=0)r.sort((a,b)=>String(a[st.s]).localeCompare(String(b[st.s]))*(st.asc?1:-1));
+    const pages=Math.max(1,Math.ceil(r.length/per));st.p=Math.min(st.p,pages-1);const v=r.slice(st.p*per,st.p*per+per);
+    host.innerHTML=`<div class="tools"><input aria-label="Search" placeholder="Search…" value="${esc(st.q)}" id="q${id}">${filterOpts?`<select aria-label="Filter" id="f${id}"><option value="">All</option>${filterOpts.map(o=>`<option ${o===st.f?'selected':''}>${o}</option>`).join('')}</select>`:''}</div>
+    <div class="tw"><table><thead><tr>${cols.map((c,i)=>`<th data-s="${i}" tabindex="0">${c}${st.s===i?(st.asc?' ▲':' ▼'):''}</th>`).join('')}${actions?'<th>Actions</th>':''}</tr></thead><tbody>
+    ${v.length?v.map(x=>`<tr>${x.map((c,i)=>`<td>${cols[i]==='Status'?pill(c):esc(c)}</td>`).join('')}${actions?`<td>${actions(x)}</td>`:''}</tr>`).join(''):`<tr><td colspan="${cols.length+1}" class="empty">No results. Try a different search or filter.</td></tr>`}</tbody></table></div>
+    <div class="tools" style="margin-top:10px;justify-content:space-between"><span class="muted">${r.length} results</span><span><button class="btn s o" id="pp${id}" ${st.p?'':'disabled'}>Prev</button> Page ${st.p+1}/${pages} <button class="btn s o" id="pn${id}" ${st.p<pages-1?'':'disabled'}>Next</button></span></div>`;
+    $('#q'+id,host).oninput=e=>{st.q=e.target.value.toLowerCase();st.p=0;draw();const i=$('#q'+id,host);i.focus();i.setSelectionRange(99,99)};
+    const f=$('#f'+id,host);if(f)f.onchange=e=>{st.f=e.target.value;st.p=0;draw()};
+    host.querySelectorAll('th[data-s]').forEach(h=>h.onclick=()=>{const i=+h.dataset.s;st.asc=st.s===i?!st.asc:true;st.s=i;draw()});
+    $('#pp'+id,host).onclick=()=>{st.p--;draw()};$('#pn'+id,host).onclick=()=>{st.p++;draw()}};
+  host.redraw=draw;draw();return host}
+const page=(t,sub,body)=>`<h1>${t}</h1><p class="muted" style="margin-bottom:16px">${sub}</p>${body}`;
+let mounts=[];
+const PAGES={
+admin:{
+overview:()=>page('Admin overview','Prototype data, not live.',`<div class="grid">${stat(1248,'Registered users')}${stat(42,'Doctors',1)}${stat(1206,'Patients',1)}${stat(37,'Appointments today')}${stat(1890,'Completed')}${stat(214,'Cancelled')}</div><div class="grid2"><div class="card"><h2>Appointment trend (week)</h2>${bars([['Mon',32],['Tue',41],['Wed',38],['Thu',45],['Fri',37],['Sat',20],['Sun',8]])}</div><div class="card"><h2>Recent activity</h2>${list([['New patient registered','5 min ago'],['Dr. Nair updated availability','1 h ago'],['Appointment A1004 cancelled','2 h ago'],['Settings saved','Yesterday']])}</div></div>`),
+users:()=>{mounts.push(()=>{const h=table('u',['ID','Name','Email','Role','Status'],()=>users,{filterCol:3,filterOpts:['Admin','Doctor','Patient'],actions:x=>`<button class="btn s o" data-v="${x[0]}">View</button> <button class="btn s o" data-e="${x[0]}">Edit</button> <button class="btn s d" data-d="${x[0]}">Delete</button>`});
+ $('#ut').append(h);h.addEventListener('click',e=>{const t=e.target,u=users.find(x=>x[0]===(t.dataset.v||t.dataset.e||t.dataset.d));if(!u)return;
+ if(t.dataset.v)modal(`<h2>${esc(u[1])}</h2><p>${esc(u[2])}<br>Role: ${u[3]}<br>Status: ${u[4]}</p>`);
+ if(t.dataset.e)userForm(u,h);if(t.dataset.d)modal(`<h2>Delete user?</h2><p>This removes ${esc(u[1])} from the mock list.</p>`,()=>{users=users.filter(x=>x!==u);h.redraw();toast('User deleted')},'Delete')});
+ $('#addu').onclick=()=>userForm(null,h)});return page('User management','Add, edit, view and delete users.',`<div class="card"><div style="margin-bottom:10px"><button class="btn t" id="addu">Add user</button></div><div id="ut"></div></div>`)},
+appointments:()=>{mounts.push(()=>{const h=table('a',['ID','Patient','Doctor','Specialty','Date','Time','Status'],()=>appts,{filterCol:6,filterOpts:['Pending','Confirmed','Completed','Cancelled'],actions:x=>`<button class="btn s o" data-v="${x[0]}">Details</button> <button class="btn s" data-c="${x[0]}">Confirm</button> <button class="btn s o" data-r="${x[0]}">Reschedule</button> <button class="btn s d" data-x="${x[0]}">Cancel</button>`});$('#at').append(h);
+ h.addEventListener('click',e=>{const t=e.target,a=appts.find(x=>x[0]===(t.dataset.v||t.dataset.c||t.dataset.r||t.dataset.x));if(!a)return;
+ if(t.dataset.v)modal(`<h2>Appointment ${a[0]}</h2><p>${a[1]} with ${a[2]} (${a[3]})<br>${a[4]} at ${a[5]}<br>Status: ${a[6]}</p>`);
+ if(t.dataset.c){a[6]='Confirmed';h.redraw();toast('Appointment confirmed')}
+ if(t.dataset.x)modal('<h2>Cancel appointment?</h2><p>The patient will be notified (simulated).</p>',()=>{a[6]='Cancelled';h.redraw();toast('Appointment cancelled')},'Cancel appointment');
+ if(t.dataset.r)modal(`<h2>Reschedule ${a[0]}</h2><label for="nd">New date</label><input id="nd" type="date" value="${a[4]}"><label for="nt">New time</label><input id="nt" type="time" value="${a[5]}">`,b=>{a[4]=$('#nd',b).value;a[5]=$('#nt',b).value;h.redraw();toast('Rescheduled')},'Save')})});
+ return page('Appointment management','Filter, confirm, reschedule or cancel.',`<div class="card"><div id="at"></div></div>`)},
+settings:()=>page('System settings','Changes are not saved to a server.',`<div class="card" style="max-width:560px"><label for="s1">Hospital name</label><input id="s1" value="CareLink General Hospital"><label for="s2">Contact email</label><input id="s2" type="email" value="info@carelink.test"><label for="s3">Phone</label><input id="s3" value="+91 141 555 0100"><label for="s4">Appointment duration (minutes)</label><select id="s4"><option>15</option><option selected>30</option><option>45</option></select><label for="s5">Available hours</label><div class="tools"><input id="s5" type="time" value="09:00" aria-label="Start"><input id="s6" type="time" value="17:00" aria-label="End"></div><label><input type="checkbox" style="width:auto" checked> Email notifications</label><label><input type="checkbox" style="width:auto"> SMS reminders</label><div class="err" id="se"></div><button class="btn t" onclick="saveSet()">Save settings</button> <button class="btn o" onclick="route()">Reset</button></div>`),
+analytics:()=>page('Performance analytics','Mock figures for layout review.',`<div class="grid2"><div class="card"><h2>Appointments by month</h2>${bars([['Jun',310],['Jul',340],['Aug',390],['Sep',420],['Oct',180]])}</div><div class="card"><h2>Patient registrations</h2>${bars([['Jun',60],['Jul',72],['Aug',95],['Sep',88],['Oct',40]])}</div><div class="card"><h2>Doctor utilization</h2>${list([['Dr. Mehta','86%'],['Dr. Iqbal','71%'],['Dr. Nair','54%']])}</div><div class="card"><h2>Status distribution</h2>${list([['Completed','68%'],['Confirmed','16%'],['Pending','9%'],['Cancelled','7%']])}</div></div>`)},
+doctor:{
+overview:()=>page('Doctor overview','Good morning, Dr. Mehta.',`<div class="grid">${stat(6,'Today')}${stat(14,'Upcoming',1)}${stat(213,'Total patients')}${stat(540,'Completed',1)}</div><div class="card"><h2>Recent patient activity</h2>${list([['Neha Gupta – ECG reviewed','09:50'],['Riya Sharma – note added','Yesterday'],['Anil Kumar – prescription renewed','2 days ago']])}</div>`),
+schedule:()=>page('Schedule management','Availability and calendar (overlaps are blocked).',`<div class="grid2"><div class="card"><h2>October 2026</h2><div class="cal">${['M','T','W','T','F','S','S'].map(d=>`<b>${d}</b>`).join('')}${Array.from({length:31},(_, i)=>`<span class="${[12,14,16,19,21].includes(i+1)?'on':''}">${i+1}</span>`).join('')}</div><p class="muted" style="margin-top:8px">Highlighted days have appointments.</p></div><div class="card"><h2>Weekly availability</h2>${list([['Mon, Wed','09:00–13:00'],['Tue, Thu','14:00–18:00'],['Fri','09:00–12:00']])}<button class="btn t" style="margin-top:12px" onclick="slotForm()">Add availability</button></div></div>`),
+records:()=>{mounts.push(()=>{const h=table('r',['Patient','Allergies','Diagnosis','Prescription','Notes','Updated','Doctor'],()=>records,{actions:x=>`<button class="btn s o" data-p="${x[0]}">Open</button>`});$('#rt').append(h);h.addEventListener('click',e=>{const r=records.find(x=>x[0]===e.target.dataset.p);if(!r)return;modal(`<h2>${r[0]}</h2><p>Allergies: ${r[1]}<br>Diagnosis: ${r[2]}<br>Prescription: ${r[3]}<br>Notes: ${r[4]}<br><span class="muted">Updated ${r[5]} by ${r[6]}</span></p><label for="nn">Add clinical note</label><textarea id="nn" rows="3"></textarea><div class="err" id="ne"></div>`,b=>{const v=$('#nn',b).value.trim();if(!v){$('#ne',b).textContent='Enter a note before saving.';return false}r[4]=v;r[5]=new Date().toISOString().slice(0,16).replace('T',' ');r[6]='Dr. Arjun Mehta';h.redraw();toast('Note saved')},'Save note')})});
+ return page('Patient records','Access is limited to authorized staff.',`<div class="card"><div id="rt"></div></div>`)},
+appointments:()=>{mounts.push(()=>{const mine=()=>appts.filter(a=>a[2]==='Dr. Arjun Mehta');const h=table('d',['ID','Patient','Doctor','Specialty','Date','Time','Status'],mine,{filterCol:6,filterOpts:['Pending','Confirmed','Completed','Cancelled'],actions:x=>`<button class="btn s" data-c="${x[0]}">Confirm</button> <button class="btn s t" data-m="${x[0]}">Complete</button> <button class="btn s d" data-x="${x[0]}">Cancel</button>`});$('#dt').append(h);
+ h.addEventListener('click',e=>{const t=e.target,a=appts.find(x=>x[0]===(t.dataset.c||t.dataset.m||t.dataset.x));if(!a)return;if(t.dataset.c){a[6]='Confirmed';h.redraw();toast('Confirmed')}
+ if(t.dataset.x)modal('<h2>Cancel appointment?</h2>',()=>{a[6]='Cancelled';h.redraw();toast('Cancelled')},'Cancel appointment');
+ if(t.dataset.m)modal(`<h2>Consultation notes</h2><label for="cn">Notes</label><textarea id="cn" rows="4"></textarea>`,()=>{a[6]='Completed';h.redraw();toast('Marked completed')},'Complete')})});
+ return page('Appointments','Upcoming and past.',`<div class="card"><div id="dt"></div></div>`)},
+feedback:()=>page('Patient feedback','Ratings from recent consultations.',`<div class="grid">${stat('4.3 ★','Average rating')}${stat(feedback.length,'Reviews',1)}</div><div class="card"><div class="tools"><select aria-label="Minimum rating" onchange="fbFilter(this.value)"><option value="0">All ratings</option><option value="5">5 stars</option><option value="4">4+ stars</option></select></div><div id="fb">${fbHtml(0)}</div></div>`)},
+patient:{
+overview:()=>page('Welcome, Riya','Your care at a glance.',`<div class="grid"><div class="card"><span class="muted">Next appointment</span><b style="display:block;font-size:1.1rem">14 Oct, 10:00</b>Dr. Arjun Mehta, Cardiology</div>${stat(7,'Total appointments',1)}${stat('Confirmed','Current status')}</div><div class="card"><h2>Recent medical history</h2>${list([['Hypertension diagnosed','28 Sep 2026'],['Amlodipine prescribed','28 Sep 2026']])}</div>`),
+book:()=>{mounts.push(()=>{const box=$('#dl');const draw=q=>box.innerHTML=doctors.filter(d=>(d[0]+d[1]).toLowerCase().includes(q)).map(d=>`<div class="card" style="margin-bottom:10px"><b>${d[0]}</b> <span class="muted">${d[1]}</span><div class="tools" style="margin:8px 0 0">${d[2].map(t=>`<button class="btn s o" data-d="${d[0]}" data-t="${t}">${t}</button>`).join('')}</div></div>`).join('')||'<div class="empty">No doctors match your search.</div>';
+ draw('');$('#ds').oninput=e=>draw(e.target.value.toLowerCase());
+ box.onclick=e=>{const t=e.target;if(!t.dataset.t)return;modal(`<h2>Confirm booking</h2><p>${t.dataset.d} at ${t.dataset.t}</p><label for="dt1">Date</label><input type="date" id="dt1" value="2026-10-20"><label for="rs">Reason for visit</label><textarea id="rs" rows="2"></textarea><div class="err" id="re"></div>`,b=>{if(!$('#rs',b).value.trim()){$('#re',b).textContent='Please enter a reason for the visit.';return false}const id='A'+(1007+appts.length-6);appts.push([id,'Riya Sharma',t.dataset.d,'',$('#dt1',b).value,t.dataset.t,'Pending']);toast('Booked (simulated). ID '+id)},'Book')}});
+ return page('Book an appointment','Search by doctor or specialty.',`<input id="ds" placeholder="Search doctor or specialty" aria-label="Search doctors" style="margin-bottom:12px;max-width:360px"><div id="dl"></div>`)},
+history:()=>{mounts.push(()=>{const h=table('h',['ID','Patient','Doctor','Specialty','Date','Time','Status'],()=>appts.filter(a=>a[1]==='Riya Sharma'),{filterCol:6,filterOpts:['Pending','Confirmed','Completed','Cancelled'],actions:x=>['Pending','Confirmed'].includes(x[6])?`<button class="btn s d" data-x="${x[0]}">Cancel</button>`:'—'});$('#ht').append(h);h.addEventListener('click',e=>{const a=appts.find(x=>x[0]===e.target.dataset.x);if(a)modal('<h2>Cancel this appointment?</h2>',()=>{a[6]='Cancelled';h.redraw();toast('Cancelled')},'Cancel appointment')})});return page('Appointment history','Upcoming and previous visits.',`<div class="card"><div id="ht"></div></div>`)},
+medical:()=>page('Medical history','Visible only to you and your care team.',`<div class="card"><div class="tl"><div><b>28 Sep 2026 – Hypertension</b><p class="muted">Dr. Arjun Mehta · Amlodipine 5mg · Review in 3 months</p></div><div><b>03 Jun 2026 – Annual check-up</b><p class="muted">Dr. Sana Iqbal · No concerns</p></div><div><b>Allergies</b><p class="muted">Penicillin</p></div></div></div>`),
+profile:()=>page('Profile','Update your details.',`<div class="card" style="max-width:520px"><label for="pn">Name</label><input id="pn" value="Riya Sharma"><label for="pe">Email</label><input id="pe" type="email" value="riya@mail.test"><label for="pph">Phone</label><input id="pph" value="9876543210"><label for="pa">Address</label><input id="pa" value="Jaipur, Rajasthan"><div class="err" id="pr"></div><button class="btn t" onclick="saveProf()">Save profile</button></div>`)}};
+function fbHtml(min){const r=feedback.filter(f=>f[0]>=min);return r.length?r.map(f=>`<div class="row"><span>${'★'.repeat(f[0])} ${esc(f[3])}</span><span class="muted">${f[2]}, ${f[1]}</span></div>`).join(''):'<div class="empty">No feedback for this filter.</div>'}
+function fbFilter(v){$('#fb').innerHTML=fbHtml(+v)}
+function saveSet(){if(!$('#s1').value.trim()){$('#se').textContent='Hospital name is required.';return}$('#se').textContent='';toast('Settings saved (mock)')}
+function saveProf(){const e=$('#pe').value,p=$('#pph').value;$('#pr').textContent=!$('#pn').value.trim()?'Name is required.':!/^\S+@\S+\.\S+$/.test(e)?'Enter a valid email address.':!/^\d{10}$/.test(p)?'Phone must be 10 digits.':'';if(!$('#pr').textContent)toast('Profile updated (mock)')}
+function slotForm(){modal(`<h2>Add availability</h2><label for="sd">Day</label><select id="sd"><option>Monday</option><option>Tuesday</option><option>Wednesday</option></select><label for="s1a">Start</label><input type="time" id="s1a" value="09:00"><label for="s2a">End</label><input type="time" id="s2a" value="12:00"><div class="err" id="oe"></div>`,b=>{if($('#s1a',b).value>=$('#s2a',b).value){$('#oe',b).textContent='End time must be after start time.';return false}toast('Availability added (mock)')},'Add')}
+function userForm(u,h){modal(`<h2>${u?'Edit':'Add'} user</h2><label for="un">Name</label><input id="un" value="${u?esc(u[1]):''}"><label for="ue">Email</label><input id="ue" type="email" value="${u?esc(u[2]):''}"><label for="ur">Role</label><select id="ur">${['Admin','Doctor','Patient'].map(r=>`<option ${u&&u[3]===r?'selected':''}>${r}</option>`).join('')}</select><div class="err" id="uerr"></div>`,b=>{const n=$('#un',b).value.trim(),e=$('#ue',b).value.trim();if(!n||!/^\S+@\S+\.\S+$/.test(e)){$('#uerr',b).textContent='Enter a name and a valid email.';return false}
+ if(u){u[1]=n;u[2]=e;u[3]=$('#ur',b).value}else users.push(['U'+String(users.length+1).padStart(3,'0'),n,e,$('#ur',b).value,'Active']);h.redraw();toast('User saved')},'Save')}
+function login(){$('#app').innerHTML=`<div class="login"><form class="card" id="lf" novalidate><div class="brand" style="padding:0 0 4px">Care<b>Link</b></div><p class="muted">Sign in to your dashboard</p><label for="em">Email</label><input id="em" type="email" autocomplete="username" value="demo@carelink.test"><label for="pw">Password</label><div class="pw"><input id="pw" type="password" autocomplete="current-password" value="demo-only"><button type="button" class="btn s o" id="tg" aria-label="Show password">Show</button></div><label for="rl">Role</label><select id="rl"><option value="admin">Admin</option><option value="doctor">Doctor</option><option value="patient">Patient</option></select><div class="err" id="le" role="alert"></div><button class="btn" style="width:100%" id="lb">Sign in</button><p class="note" style="margin:14px 0 0">Prototype: no real authentication. Any non-empty credentials work. The role selector stands in for the server-side role lookup.</p></form></div>`;
+ $('#tg').onclick=()=>{const p=$('#pw'),s=p.type==='password';p.type=s?'text':'password';$('#tg').textContent=s?'Hide':'Show'};
+ $('#lf').onsubmit=e=>{e.preventDefault();if(!/^\S+@\S+\.\S+$/.test($('#em').value)||!$('#pw').value){$('#le').textContent='Enter a valid email and your password.';return}$('#lb').textContent='Signing in…';$('#lb').disabled=true;setTimeout(()=>{sessionStorage.setItem('role',$('#rl').value);location.hash='#/'+$('#rl').value+'/overview'},600)}}
+function route(){mounts=[];const role=sessionStorage.getItem('role'),[,r,p]=location.hash.split('/');
+ if(!role||!NAV[role]&&r!=='login'){return login()}
+ if(r==='login'||!r){location.hash='#/'+role+'/overview';return}
+ if(!NAV[r]||(r!==role))return err(role,r!==role&&NAV[r]?'403':'404');
+ if(!PAGES[r][p])return err(role,'404');
+ shell(role,p,PAGES[r][p]());mounts.forEach(f=>f())}
+function err(role,c){shell(role,'',`<div class="card empty"><h1>${c==='403'?'Access denied':'Page not found'}</h1><p>${c==='403'?'Your role cannot open this area. The real app enforces this on the server.':'That page does not exist.'}</p><p style="margin-top:12px"><a href="#/${role}/overview">Back to your dashboard</a></p></div>`)}
+function shell(role,cur,body){$('#app').innerHTML=`<div class="shell"><aside id="sb"><div class="brand">Care<b>Link</b></div><nav aria-label="Main">${NAV[role].map(n=>`<a href="#/${role}/${n[0]}" class="${n[0]===cur?'on':''}" ${n[0]===cur?'aria-current="page"':''}>${n[1]}</a>`).join('')}</nav></aside><main><div class="top"><button class="btn o menu" id="mn" aria-label="Open menu">Menu</button><div class="who"><span>${NAMES[role]}</span><button class="btn s o" id="lo">Log out</button></div></div><div class="note">Prototype with mock data. Nothing is saved, and no real login or database is connected.</div>${body}</main></div>`;
+ $('#mn').onclick=()=>$('#sb').classList.toggle('open');$('#sb').onclick=()=>$('#sb').classList.remove('open');
+ $('#lo').onclick=()=>modal('<h2>Log out?</h2>',()=>{sessionStorage.removeItem('role');location.hash='';login()},'Log out')}
+addEventListener('hashchange',route);route();
+</script>
+</body>
+</html>
